@@ -17,44 +17,53 @@
 請將專案 Clone 到本地並建立自己的開發分支：
 ```bash
 git clone <專案 URL>
-cd rebase-html-lab
+cd rebase-practice
 git checkout -b feature-<你的名字>
+
+# 🔍 檢查點：確認目前分支標記為 feature-<你的名字>
+git branch
 ```
 
 ### 2. 進行開發
-請用編輯器打開 `index.html`，找到屬於你的區塊（例如 `id="alice"`），將其中的 `<p>內容：尚未更新</p>` 改成你喜歡的描述，然後提交：
+請用編輯器打開 `index.html`，找到屬於你的區塊（例如 `id="alice"`），將內容修改後提交：
 ```bash
 git add index.html
 git commit -m "Feat: 更新 <你的名字> 的任務內容"
+
+# 🔍 檢查點：確認 Commit 已成功建立，且目前領先於 main
+git log --oneline --graph --all
 ```
 
 ### 3. 同步 Lead 的更新 (開始 Rebase)
-當 Lead 更新了 `main` 分支後，請執行以下步驟來同步：
+當 Lead 更新了 `main` 分支後，請執行以下步驟：
 ```bash
 # 1. 取得遠端最新狀態
 git fetch origin
 
-# 2. 將你的分支 Rebase 到最新的 main
+# 2. 🔍 重要檢查點：觀察「分岔」！
+# 你應該會看到兩條路徑從某個點分開，一條是你的進度，一條是 Lead 的進度
+git log --oneline --graph --all
+
+# 3. 開始 Rebase (將你的進度重新基於 origin/main)
 git rebase origin/main
 ```
 
 ### 4. 處理衝突 (Conflict Resolution)
-如果在 Rebase 過程中遇到衝突，Git 會停止並提示你：
-1. **打開檔案**：找到 `<<<<<<< HEAD` 與 `>>>>>>>` 標記的區塊。
-2. **手動修復**：決定要保留 Lead 的修改、你的修改，還是兩者都保留（請確保 HTML 標籤結構正確）。
-3. **標記解決**：
+如果在 Rebase 過程中遇到衝突：
+1. **打開檔案**：找到 `<<<<<<< HEAD` 與 `>>>>>>>` 標記。
+2. **手動修復**：決定保留內容（建議兩者並存，但確保 HTML 標籤完整）。
+3. **標記解決並繼續**：
    ```bash
    git add index.html
-   ```
-4. **繼續 Rebase**：
-   ```bash
    git rebase --continue
    ```
-*(註：如果有多個 commit 衝突，請重複上述動作。)*
 
 ### 5. 驗證與推送
 1. **預覽**：在瀏覽器打開 `index.html`，確認你的修改與 Lead 的修改都正確呈現。
-2. **推送**：
+2. **🔍 重要檢查點：觀察「直線」！**
+   # 你應該會看到分岔消失，你的 Commit 現在排在 origin/main 的正上方
+   git log --oneline --graph --all
+3. **推送**：
    ```bash
    git push origin feature-<你的名字> --force-with-lease
    ```
